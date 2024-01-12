@@ -1,0 +1,57 @@
+module vending_machine_tb;
+    reg i_clock, i_resetn;
+    reg [1:0] i_select;
+    reg [6:0] i_money_in;
+    wire o_dispence;
+    wire [6:0] o_change;
+
+    vending_machine uut(.i_clock(i_clock), .i_resetn(i_resetn), .i_select(i_select), .i_money_in(i_money_in), .o_dispence(o_dispence), .o_change(o_change));
+    
+    task select_item(input [1:0] sel); begin
+        i_clock = 1'b0;
+        #50 i_clock = 1'b1;
+        i_select = sel;
+        #50 ;
+    end 
+    endtask
+
+    task enter_money(input [6:0] money); begin
+        i_clock = 1'b0;
+        #50 i_clock = 1'b1;
+        i_money_in = money;
+        #50 ;
+    end
+    endtask
+
+    task clk; begin
+        i_clock = 1'b0;
+        #50 i_clock = 1'b1;
+        #50 ;
+        end
+    endtask
+
+    initial begin
+        i_resetn = 0;
+        #50 i_resetn = 1;
+
+        select_item(2'b01);
+        enter_money(7'd10);
+        clk;
+        enter_money(7'd10);
+        clk;
+        enter_money(7'd20);
+        clk;
+
+        select_item(2'b10);
+        enter_money(7'd20);
+        clk;
+        enter_money(7'd20);
+        clk;
+
+        select_item(2'b11);
+        enter_money(7'd10);
+        clk;
+        enter_money(7'd50);
+        clk;	
+    end
+endmodule 
